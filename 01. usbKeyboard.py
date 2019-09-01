@@ -7,6 +7,9 @@ NULL_CHAR = chr(0)
 def write_report(report):
 	with open('/dev/hidg0', 'rb+') as fd:
 		fd.write(report.encode())
+def write_report_raw(report):
+	with open('/dev/hidg0', 'rb+') as fd:
+		fd.write(report)
 
 # define lists of keys
 lower_case = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
@@ -93,7 +96,7 @@ def main(stdscr):
 			write_report(NULL_CHAR*2+chr(79)+NULL_CHAR*5)
 			write_report(NULL_CHAR*8)
 			
-    #--- ctrl+ keys
+		#--- ctrl+ keys
 		elif key == 22:
 			print('ctrl+v')
 			write_report(chr(17)+chr(0)+chr(25)+chr(0)*5)
@@ -119,8 +122,73 @@ def main(stdscr):
 			write_report(chr(17)+chr(0)+chr(16)+chr(0)*5)
 			write_report(NULL_CHAR*8)
 			
+		elif key == 27:
+			skeys = "%d" % key
+			stdscr.nodelay(True)
+			for n in range(0,10):
+				nkey = stdscr.getch()
+				if nkey == curses.ERR:
+					break
+				skeys += " %d" % nkey
+			stdscr.nodelay(False)
+			
+			if skeys == "27 91 49 49 126":
+				print('f1')			
+				write_report(NULL_CHAR*2+chr(58)+NULL_CHAR*5)
+				write_report(NULL_CHAR*8)
+			elif skeys == "27 91 49 50 126":
+				print('f2')
+				write_report(NULL_CHAR*2+chr(59)+NULL_CHAR*5)
+				write_report(NULL_CHAR*8)
+			elif skeys == "27 91 49 51 126":
+				print('f3')
+				write_report(NULL_CHAR*2+chr(60)+NULL_CHAR*5)
+				write_report(NULL_CHAR*8)
+			elif skeys == "27 91 49 52 126":
+				print('f4')
+				write_report(NULL_CHAR*2+chr(61)+NULL_CHAR*5)
+				write_report(NULL_CHAR*8)
+			else:
+				print('---',skeys,'---')
+				stdscr.addstr("This program doesn't know that key.....")
+		elif key == 269:
+			print('f5')
+			write_report(NULL_CHAR*2+chr(62)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+		elif key == 270:
+			print('f6')
+			write_report(NULL_CHAR*2+chr(63)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+		elif key == 271:
+			print('f7')
+			write_report(NULL_CHAR*2+chr(64)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+		elif key == 272:
+			print('f8')
+			write_report(NULL_CHAR*2+chr(65)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+		elif key == 273:
+			print('f9')
+			write_report(NULL_CHAR*2+chr(66)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+		elif key == 274:
+			print('f10')
+			write_report(NULL_CHAR*2+chr(67)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+		elif key == 275:
+			print('f11')
+			write_report(NULL_CHAR*2+chr(68)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+		elif key == 276:
+			print('f12')
+			write_report(NULL_CHAR*2+chr(69)+NULL_CHAR*5)
+			write_report(NULL_CHAR*8)
+			
 		else:
-			stdscr.addstr(key)
+			try:
+				stdscr.addstr(key)
+			except:
+				print('---',key,'---')
 			stdscr.addstr("This program doesn't know that key.....")
 
 # run main function (loop)
